@@ -26,5 +26,6 @@ public class task3 {
             }
             System.out.println();
         } while (option!=0);
+        sc.close();
     }
 }
