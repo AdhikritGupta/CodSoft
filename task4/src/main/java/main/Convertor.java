@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import java.util.Map;   
 import java.util.Set;
 import java.util.Scanner;
 import org.apache.commons.io.IOUtils;
@@ -23,7 +23,6 @@ public class Convertor {
         request.connect();
 
         String result = IOUtils.toString((InputStream) request.getContent(), StandardCharsets.UTF_8);
-        
         JsonElement root = JsonParser.parseString(result);
         JsonObject jsonobj = root.getAsJsonObject();
         JsonObject jsonObject = jsonobj.get("conversion_rates").getAsJsonObject();
@@ -39,19 +38,32 @@ public class Convertor {
         }
         System.out.println("\n");
         while (true) {
-            System.out.print("\nEnter amount in USD(Enter 0 to exit): $ ");
-            double amount = Double.parseDouble(sc.nextLine());
-            if(amount==0.0){
+            System.out.print("Enter base currency(Leave empty to exit): ");
+            String baseCurr = sc.nextLine();
+            if (baseCurr.isEmpty()) {
                 break;
             }
-            System.out.println("Enter currency to convert to: ");
+            url_str = url_str.replace("USD", baseCurr);
+            url = new URL(url_str);
+            request = (HttpURLConnection) url.openConnection();
+            request.connect();
+            result = IOUtils.toString((InputStream) request.getContent(), StandardCharsets.UTF_8);
+            root = JsonParser.parseString(result);
+            jsonobj = root.getAsJsonObject();
+            jsonObject = jsonobj.get("conversion_rates").getAsJsonObject();
+
+            System.out.print("Enter amount in "+baseCurr+": ");
+            double amount = Double.parseDouble(sc.nextLine());
+            
+            System.out.print("Enter currency to convert to: ");
             String currency = sc.nextLine();
             double rate = Double.parseDouble(jsonObject.get(currency).getAsString());
-            System.out.println("Current conversion rate USD - "+currency+": "+rate);
-            System.out.println("Value after conversion: "+currency+": "+amount*rate);
+
+            System.out.println("\nCurrent conversion rate "+baseCurr+" - "+currency+": "+rate);
+            System.out.println("Value after conversion: "+currency+": "+amount*rate+"\n");
 
         }
-        System.out.println("Thank You!");
+        System.out.println("\n***Thank You!***");
         sc.close();
     }
 }
