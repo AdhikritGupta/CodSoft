@@ -1,4 +1,4 @@
-package hello;
+package main;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
-public class HelloWorld {
+public class Convertor {
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         String url_str = "https://v6.exchangerate-api.com/v6/b539e7dbe4d9d74db3d913d9/latest/USD";
